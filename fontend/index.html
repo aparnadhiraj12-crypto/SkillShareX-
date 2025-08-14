@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillShareX - Empower Your Skills</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-2xl font-bold text-indigo-600">SkillShareX</h1>
+      <nav class="hidden md:flex space-x-6">
+        <a href="#" class="text-gray-700 hover:text-indigo-600 font-medium">Home</a>
+        <a href="signin.html" class="text-gray-700 hover:text-indigo-600 font-medium">Sign In</a>
+        <a href="signup.html" class="text-gray-700 hover:text-indigo-600 font-medium">Sign Up</a>
+        <a href="profile.html" class="text-gray-700 hover:text-indigo-600 font-medium">Profile</a>
+      </nav>
+      <button id="menu-btn" class="md:hidden p-2 text-gray-700">
+        ☰
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
+      <a href="#" class="block py-2 text-gray-700">Home</a>
+      <a href="signin.html" class="block py-2 text-gray-700">Sign In</a>
+      <a href="signup.html" class="block py-2 text-gray-700">Sign Up</a>
+      <a href="profile.html" class="block py-2 text-gray-700">Profile</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-gradient text-white py-20">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h2 class="text-4xl md:text-6xl font-extrabold mb-6">Discover & Share Skills with the World</h2>
+      <p class="text-lg md:text-xl mb-8">
+        Connect with talented individuals, trade skills, and earn SkillTokens.
+      </p>
+      <a href="signup.html" class="bg-white text-indigo-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition">
+        Get Started
+      </a>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h3 class="text-3xl font-bold mb-10">Why Choose SkillShareX?</h3>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="p-6 bg-white rounded-lg shadow hover:shadow-lg transition">
+          <div class="text-indigo-600 text-4xl mb-4">🤝</div>
+          <h4 class="font-semibold text-lg mb-2">Skill Matching</h4>
+          <p class="text-gray-600">AI-powered matching to connect you with the right people.</p>
+        </div>
+        <div class="p-6 bg-white rounded-lg shadow hover:shadow-lg transition">
+          <div class="text-indigo-600 text-4xl mb-4">💰</div>
+          <h4 class="font-semibold text-lg mb-2">Earn Tokens</h4>
+          <p class="text-gray-600">Get rewarded with SkillTokens for every skill you share.</p>
+        </div>
+        <div class="p-6 bg-white rounded-lg shadow hover:shadow-lg transition">
+          <div class="text-indigo-600 text-4xl mb-4">🌍</div>
+          <h4 class="font-semibold text-lg mb-2">Global Community</h4>
+          <p class="text-gray-600">Join a network of learners and experts from all over the world.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-20 hero-gradient text-white text-center">
+    <h3 class="text-3xl font-bold mb-6">Ready to Share Your Skills?</h3>
+    <p class="mb-8">Sign up today and start your journey towards skill exchange and rewards.</p>
+    <a href="signup.html" class="bg-white text-indigo-700 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition">
+      Join Now
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 text-center">
+    <p>&copy; 2025 SkillShareX. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript for Mobile Menu -->
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    menuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+  </script>
+</body>
+</html>
