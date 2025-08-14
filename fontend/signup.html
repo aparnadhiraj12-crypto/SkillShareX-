@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillShareX - Sign Up</title>
+  <style>
+    /* ====== Global Styles ====== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    /* ====== Container ====== */
+    .signup-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 420px;
+      width: 100%;
+    }
+    .signup-container h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #2563eb;
+    }
+    /* ====== Form Styles ====== */
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+    }
+    input {
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+    input:focus {
+      border-color: #2563eb;
+      outline: none;
+      box-shadow: 0px 0px 6px rgba(37, 99, 235, 0.3);
+    }
+    /* ====== Button ====== */
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #1e40af;
+    }
+    /* ====== Extra Links ====== */
+    .links {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .links a {
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+    /* ====== Messages ====== */
+    .error, .success {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      display: none;
+    }
+    .error {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+    .success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="signup-container">
+    <h1>Create Account</h1>
+    <form id="signupForm">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" placeholder="Enter your full name" required />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="Enter your email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required />
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" placeholder="Confirm your password" required />
+
+      <button type="submit">Sign Up</button>
+
+      <div class="error" id="errorMsg"></div>
+      <div class="success" id="successMsg">Account created successfully! Redirecting...</div>
+
+      <div class="links">
+        Already have an account? <a href="signin.html">Sign In</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // ====== JS Sign-up Logic ======
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // Prevent page reload
+
+      const fullname = document.getElementById("fullname").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+      const errorMsg = document.getElementById("errorMsg");
+      const successMsg = document.getElementById("successMsg");
+
+      errorMsg.style.display = "none";
+      successMsg.style.display = "none";
+
+      // Basic validation
+      if (fullname.length < 3) {
+        errorMsg.textContent = "Full name must be at least 3 characters.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        errorMsg.textContent = "Please enter a valid email address.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMsg.textContent = "Password must be at least 6 characters.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = "Passwords do not match.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      // Success simulation (replace with backend API call)
+      successMsg.style.display = "block";
+
+      // Save to localStorage for demo purposes
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userPassword", password);
+
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        window.location.href = "signin.html";
+      }, 2000);
+    });
+  </script>
+
+</body>
+</html>
