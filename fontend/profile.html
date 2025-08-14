@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillShareX - User Profile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: #0f172a; /* Dark navy */
+            color: #f1f5f9; /* Light text */
+        }
+
+        header {
+            background: #1e293b;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: #38bdf8;
+            margin: 0;
+        }
+
+        header a {
+            color: #f1f5f9;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #38bdf8;
+        }
+
+        .profile-header h2 {
+            margin: 0;
+        }
+
+        .token-info {
+            background: #0f172a;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #38bdf8;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .form-section {
+            margin-top: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            color: #f1f5f9;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background: #38bdf8;
+            color: #0f172a;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        @media (max-width: 600px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>SkillShareX</h1>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="profile.html">Profile</a>
+        <a href="signin.html">Sign Out</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="profile-header">
+        <img src="https://via.placeholder.com/120" alt="Profile Picture" id="profile-pic">
+        <div>
+            <h2 id="display-name">John Doe</h2>
+            <div class="token-info" id="token-balance">💰 Tokens: 150</div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" value="John Doe">
+
+        <label for="bio">Bio</label>
+        <textarea id="bio">Passionate about sharing skills and learning new ones!</textarea>
+
+        <label for="skills">Skills</label>
+        <input type="text" id="skills" placeholder="Add skills separated by commas">
+        <div class="skills-list" id="skills-list">
+            <span class="skill-tag">Web Development</span>
+            <span class="skill-tag">Python</span>
+        </div>
+
+        <button id="save-btn">Save Changes</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('save-btn').addEventListener('click', function() {
+        const name = document.getElementById('name').value;
+        const bio = document.getElementById('bio').value;
+        const skillsInput = document.getElementById('skills').value;
+
+        // Update display name
+        document.getElementById('display-name').textContent = name;
+
+        // Update skills list
+        const skillsArray = skillsInput.split(',').map(skill => skill.trim()).filter(skill => skill);
+        const skillsListDiv = document.getElementById('skills-list');
+        skillsListDiv.innerHTML = ''; // Clear old skills
+        skillsArray.forEach(skill => {
+            const span = document.createElement('span');
+            span.className = 'skill-tag';
+            span.textContent = skill;
+            skillsListDiv.appendChild(span);
+        });
+
+        alert('Profile updated successfully!');
+    });
+</script>
+
+</body>
+</html>
