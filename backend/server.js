@@ -1,75 +1,127 @@
 // server.js
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import express from 'express';
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
-// Fake in-memory DB (replace with MongoDB later)
-let users = [];
-
+dotenv.config();
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static('public')); // For your HTML/CSS/JS files
 
-const SECRET_KEY = "skillsharex_secret"; // Change in production
+// MySQL connection
+let db;
+(async () => {
+  try {
+    db = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT
+    });
+    console.log('✅ Connected to MySQL Database');
+  } catch (err) {
+    console.error('❌ Database connection failed:', err.message);
+    process.exit(1);
+  }
+})();
 
-// Signup Route
-app.post("/signup", async (req, res) => {
-    const { name, email, password } = req.body;
+// ---------------------- SIGNUP ----------------------
+app.post('/signup', async (req, res) => {
+  const { username, email, password } = req.body;
 
-    // Check if user already exists
-    if (users.find(user => user.email === email)) {
-        return res.status(400).json({ success: false, message: "User already exists" });
-    }
+  if (!username || !email || !password)
+    return res.status(400).json({ message: 'All fields are required' });
+
+  try {
+    // Check if email exists
+    const [existingUser] = await db.execute(
+      'SELECT id FROM users WHERE email = ?',
+      [email]
+    );
+    if (existingUser.length > 0)
+      return res.status(400).json({ message: 'Email already registered' });
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save user
-    const newUser = { name, email, password: hashedPassword };
-    users.push(newUser);
+    // Insert into DB
+    await db.execute(
+      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+      [username, email, hashedPassword]
+    );
 
-    res.json({ success: true, message: "Signup successful!" });
+    res.json({ message: 'User registered successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error registering user', error: err.message });
+  }
 });
 
-// Signin Route
-app.post("/signin", async (req, res) => {
-    const { email, password } = req.body;
-    const user = users.find(user => user.email === email);
+// ---------------------- SIGNIN ----------------------
+app.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
 
-    if (!user) {
-        return res.status(400).json({ success: false, message: "Invalid email or password" });
-    }
+  if (!email || !password)
+    return res.status(400).json({ message: 'All fields are required' });
 
-    // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.status(400).json({ success: false, message: "Invalid email or password" });
-    }
+  try {
+    const [rows] = await db.execute(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
 
-    // Create JWT token
-    const token = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: "1h" });
+    if (rows.length === 0)
+      return res.status(400).json({ message: 'Invalid email or password' });
 
-    res.json({ success: true, message: "Login successful", token });
+    const user = rows[0];
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid)
+      return res.status(400).json({ message: 'Invalid email or password' });
+
+    // Create token
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: '1h'
+    });
+
+    res.json({ message: 'Login successful', token, username: user.username });
+  } catch (err) {
+    res.status(500).json({ message: 'Error logging in', error: err.message });
+  }
 });
 
-// Profile Route
-app.get("/profile", (req, res) => {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-        return res.status(401).json({ success: false, message: "No token provided" });
-    }
+// ---------------------- PROFILE ----------------------
+app.get('/profile', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'No token provided' });
 
-    try {
-        const decoded = jwt.verify(token, SECRET_KEY);
-        const user = users.find(u => u.email === decoded.email);
-        res.json({ success: true, user: { name: user.name, email: user.email } });
-    } catch (err) {
-        res.status(401).json({ success: false, message: "Invalid token" });
-    }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const [rows] = await db.execute(
+      'SELECT id, username, email FROM users WHERE id = ?',
+      [decoded.id]
+    );
+
+    if (rows.length === 0)
+      return res.status(404).json({ message: 'User not found' });
+
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(401).json({ message: 'Invalid or expired token' });
+  }
 });
 
-// Start server
+// ---------------------- START SERVER ----------------------
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
+
